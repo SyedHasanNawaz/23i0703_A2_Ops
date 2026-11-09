@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Analysis Result</h2>
+<p><strong>File:</strong> {{ filename }}</p>
+<h1 style="color: {% if 'AI' in label %}red{% else %}green{% endif %};">
+    {{ label }}
+</h1>
+<p><strong>Confidence:</strong> {{ conf }}%</p>
+<p><em>Raw probability of being AI: {{ raw_p }}%</em></p>
+<br>
+<a href="/" class="btn">Analyze Another</a>
+{% endblock %}

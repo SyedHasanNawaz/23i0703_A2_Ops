@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Search History</h2>
+<table>
+    <tr>
+        <th>ID</th>
+        <th>Time (UTC)</th>
+        <th>Filename</th>
+        <th>Verdict</th>
+        <th>Confidence</th>
+    </tr>
+    {% for log in logs %}
+    <tr>
+        <td>{{ log.id }}</td>
+        <td>{{ log.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+        <td>{{ log.filename }}</td>
+        <td style="color: {% if 'AI' in log.label %}red{% else %}green{% endif %}; font-weight: bold;">
+            {{ log.label }}
+        </td>
+        <td>{{ (log.confidence * 100)|round(2) }}%</td>
+    </tr>
+    {% else %}
+    <tr><td colspan="5">No history yet.</td></tr>
+    {% endfor %}
+</table>
+{% endblock %}
