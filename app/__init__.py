@@ -1,7 +1,9 @@
 import os
+import time
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
+from sqlalchemy.exc import OperationalError
 
 db = SQLAlchemy()
 
@@ -15,18 +17,23 @@ class RequestLog(db.Model):
 def create_app():
     app = Flask(__name__)
     
-    # Config
     app.config["SECRET_KEY"] = os.getenv("FLASK_SECRET", "dev-secret")
     app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL", "sqlite:///history.db")
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-    app.config["MAX_CONTENT_LENGTH"] = 5 * 1024 * 1024 # 5 MB limit
+    app.config["MAX_CONTENT_LENGTH"] = 5 * 1024 * 1024
     
     db.init_app(app)
     
+    # Wait for database to be ready
     with app.app_context():
-        db.create_all()
+        for i in range(10):
+            try:
+                db.create_all()
+                break
+            except OperationalError:
+                print("Database not ready, waiting 2 seconds...")
+                time.sleep(2)
     
-    # Routes
     from .routes import main_bp
     app.register_blueprint(main_bp)
     

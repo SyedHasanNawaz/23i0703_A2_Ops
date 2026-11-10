@@ -1,0 +1,8 @@
+venv/
+.git/
+mlruns/
+notebooks/
+data/
+*.ipynb
+.env
+__pycache__/
