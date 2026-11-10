@@ -53,7 +53,9 @@ def preprocess_image(image_bytes: bytes) -> np.ndarray:
     return arr
 
 @app.get("/")
+@app.get("/app.py")
 @app.get("/api/health")
+@app.get("/health")
 def health():
     return {
         "status": "ok",
@@ -62,8 +64,18 @@ def health():
         "model_cached": os.path.exists(MODEL_LOCAL_PATH)
     }
 
+@app.get("/api/predict")
+@app.get("/predict")
+def predict_get_help():
+    return {
+        "status": "ok",
+        "message": "VisionGuard Prediction API is running. Submit a POST request with an image file to /api/predict to get a prediction."
+    }
+
 @app.post("/api/predict")
 @app.post("/predict")
+@app.post("/app.py")
+@app.post("/")
 async def predict_image(
     request: Request,
     file: UploadFile = File(None),
